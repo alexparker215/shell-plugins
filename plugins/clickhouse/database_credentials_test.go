@@ -45,5 +45,21 @@ func TestDatabaseCredentialsProvisioner(t *testing.T) {
 				},
 			},
 		},
+		"with port": {
+			ItemFields: map[sdk.FieldName]string{
+				fieldname.Host:     "abc123.us-east-1.aws.clickhouse.cloud",
+				fieldname.Port:     "9440",
+				fieldname.Username: "default",
+				fieldname.Password: "hunter2",
+			},
+			ExpectedOutput: sdk.ProvisionOutput{
+				Environment: map[string]string{
+					"CLICKHOUSE_HOST":     "abc123.us-east-1.aws.clickhouse.cloud",
+					"CLICKHOUSE_USER":     "default",
+					"CLICKHOUSE_PASSWORD": "hunter2",
+				},
+				CommandLine: []string{"--port", "9440"},
+			},
+		},
 	})
 }

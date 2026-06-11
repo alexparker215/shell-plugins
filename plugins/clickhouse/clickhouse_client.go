@@ -7,12 +7,11 @@ import (
 	"github.com/1Password/shell-plugins/sdk/schema/credname"
 )
 
-// ClickHouseClient covers the `clickhouse-client` symlink (a single binary invocation).
 func ClickHouseClient() schema.Executable {
 	return schema.Executable{
-		Name:      "ClickHouse client",
+		Name:      "ClickHouse Client",
 		Runs:      []string{"clickhouse-client"},
-		DocsURL:   sdk.URL("https://clickhouse.com/docs/integrations/sql-clients/cli"),
+		DocsURL:   sdk.URL("https://clickhouse.com/docs/interfaces/client"),
 		NeedsAuth: needsauth.NotForHelpOrVersion(),
 		Uses: []schema.CredentialUsage{
 			{
