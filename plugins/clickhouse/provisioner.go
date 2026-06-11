@@ -8,10 +8,6 @@ import (
 	"github.com/1Password/shell-plugins/sdk/schema/fieldname"
 )
 
-// clickHouseProvisioner provisions the host, user, and password as environment variables
-// (the only connection settings clickhouse-client reads from the environment) and, when a
-// port is stored on the item, passes it as the --port flag. ClickHouse has no port
-// environment variable, so the port can only be applied as a command-line argument.
 type clickHouseProvisioner struct {
 	envVars sdk.Provisioner
 }
