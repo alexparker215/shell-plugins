@@ -26,6 +26,53 @@ func TestDatabaseCredentialsImporter(t *testing.T) {
 				},
 			},
 		},
+		"XML config file": {
+			Files: map[string]string{
+				"~/.clickhouse-client/config.xml": `<config>
+    <host>abc123.us-east-1.aws.clickhouse.cloud</host>
+    <port>9440</port>
+    <user>default</user>
+    <password>hunter2</password>
+    <secure>true</secure>
+</config>`,
+			},
+			ExpectedCandidates: []sdk.ImportCandidate{
+				{
+					Fields: map[sdk.FieldName]string{
+						fieldname.Host:     "abc123.us-east-1.aws.clickhouse.cloud",
+						fieldname.Port:     "9440",
+						fieldname.Username: "default",
+						fieldname.Password: "hunter2",
+					},
+				},
+			},
+		},
+		"YAML config file": {
+			Files: map[string]string{
+				"~/.config/clickhouse/config.yaml": `host: abc123.us-east-1.aws.clickhouse.cloud
+port: 9440
+user: default
+password: 'hunter2'
+secure: true`,
+			},
+			ExpectedCandidates: []sdk.ImportCandidate{
+				{
+					Fields: map[sdk.FieldName]string{
+						fieldname.Host:     "abc123.us-east-1.aws.clickhouse.cloud",
+						fieldname.Port:     "9440",
+						fieldname.Username: "default",
+						fieldname.Password: "hunter2",
+					},
+				},
+			},
+		},
+		"config file without a password is skipped": {
+			Files: map[string]string{
+				"~/.clickhouse-client/config.yml": `host: localhost
+user: default`,
+			},
+			ExpectedCandidates: nil,
+		},
 	})
 }
 

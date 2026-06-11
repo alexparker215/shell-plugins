@@ -10,8 +10,8 @@ import (
 
 func DatabaseCredentials() schema.CredentialType {
 	return schema.CredentialType{
-		Name:          credname.DatabaseCredentials,
-		DocsURL:       sdk.URL("https://clickhouse.com/docs/operations/access-rights"),
+		Name:    credname.DatabaseCredentials,
+		DocsURL: sdk.URL("https://clickhouse.com/docs/operations/access-rights"),
 		Fields: []schema.CredentialField{
 			{
 				Name:                fieldname.Host,
@@ -33,7 +33,10 @@ func DatabaseCredentials() schema.CredentialType {
 			},
 		},
 		DefaultProvisioner: newProvisioner(),
-		Importer:           importer.TryEnvVarPair(defaultEnvVarMapping),
+		Importer: importer.TryAll(
+			importer.TryEnvVarPair(defaultEnvVarMapping),
+			TryClickHouseConfigFile(),
+		),
 	}
 }
 
