@@ -15,21 +15,26 @@ func DatabaseCredentials() schema.CredentialType {
 		Fields: []schema.CredentialField{
 			{
 				Name:                fieldname.Host,
-				MarkdownDescription: "Host of the ClickHouse server to connect to.",
+				MarkdownDescription: "The hostname of the ClickHouse server to connect to. Can either be a hostname or an IPv4 or IPv6 address.",
 			},
 			{
 				Name:                fieldname.Port,
-				MarkdownDescription: "Port of the ClickHouse server to connect to.",
+				MarkdownDescription: "The port the server is accepting connections on. The default ports are 9440 (TLS) and 9000 (no TLS).",
 				Optional:            true,
 			},
 			{
-				Name:                fieldname.Username,
-				MarkdownDescription: "ClickHouse user to authenticate as.",
+				Name:                fieldname.User,
+				MarkdownDescription: "The database user to connect as.",
 			},
 			{
 				Name:                fieldname.Password,
-				MarkdownDescription: "Password used to authenticate to ClickHouse.",
+				MarkdownDescription: "The password of the database user.",
 				Secret:              true,
+			},
+			{
+				Name:                fieldname.Secure,
+				MarkdownDescription: "Whether to use TLS. Enabled automatically when connecting to port 9440 (the default secure port) or ClickHouse Cloud.",
+				Optional:            true,
 			},
 		},
 		DefaultProvisioner: newProvisioner(),
@@ -42,6 +47,6 @@ func DatabaseCredentials() schema.CredentialType {
 
 var defaultEnvVarMapping = map[string]sdk.FieldName{
 	"CLICKHOUSE_HOST":     fieldname.Host,
-	"CLICKHOUSE_USER":     fieldname.Username,
+	"CLICKHOUSE_USER":     fieldname.User,
 	"CLICKHOUSE_PASSWORD": fieldname.Password,
 }

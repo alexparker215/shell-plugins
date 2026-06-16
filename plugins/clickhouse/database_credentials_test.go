@@ -20,7 +20,7 @@ func TestDatabaseCredentialsImporter(t *testing.T) {
 				{
 					Fields: map[sdk.FieldName]string{
 						fieldname.Host:     "abc123.us-east-1.aws.clickhouse.cloud",
-						fieldname.Username: "default",
+						fieldname.User:     "default",
 						fieldname.Password: "hunter2",
 					},
 				},
@@ -41,8 +41,9 @@ func TestDatabaseCredentialsImporter(t *testing.T) {
 					Fields: map[sdk.FieldName]string{
 						fieldname.Host:     "abc123.us-east-1.aws.clickhouse.cloud",
 						fieldname.Port:     "9440",
-						fieldname.Username: "default",
+						fieldname.User:     "default",
 						fieldname.Password: "hunter2",
+						fieldname.Secure:   "true",
 					},
 				},
 			},
@@ -60,8 +61,9 @@ secure: true`,
 					Fields: map[sdk.FieldName]string{
 						fieldname.Host:     "abc123.us-east-1.aws.clickhouse.cloud",
 						fieldname.Port:     "9440",
-						fieldname.Username: "default",
+						fieldname.User:     "default",
 						fieldname.Password: "hunter2",
+						fieldname.Secure:   "true",
 					},
 				},
 			},
@@ -81,7 +83,7 @@ func TestDatabaseCredentialsProvisioner(t *testing.T) {
 		"default": {
 			ItemFields: map[sdk.FieldName]string{
 				fieldname.Host:     "abc123.us-east-1.aws.clickhouse.cloud",
-				fieldname.Username: "default",
+				fieldname.User:     "default",
 				fieldname.Password: "hunter2",
 			},
 			ExpectedOutput: sdk.ProvisionOutput{
@@ -96,7 +98,7 @@ func TestDatabaseCredentialsProvisioner(t *testing.T) {
 			ItemFields: map[sdk.FieldName]string{
 				fieldname.Host:     "abc123.us-east-1.aws.clickhouse.cloud",
 				fieldname.Port:     "9440",
-				fieldname.Username: "default",
+				fieldname.User:     "default",
 				fieldname.Password: "hunter2",
 			},
 			ExpectedOutput: sdk.ProvisionOutput{
@@ -106,6 +108,23 @@ func TestDatabaseCredentialsProvisioner(t *testing.T) {
 					"CLICKHOUSE_PASSWORD": "hunter2",
 				},
 				CommandLine: []string{"--port", "9440"},
+			},
+		},
+		"with port and secure (ClickHouse Cloud)": {
+			ItemFields: map[sdk.FieldName]string{
+				fieldname.Host:     "abc123.us-east-1.aws.clickhouse.cloud",
+				fieldname.Port:     "9440",
+				fieldname.User:     "default",
+				fieldname.Password: "hunter2",
+				fieldname.Secure:   "true",
+			},
+			ExpectedOutput: sdk.ProvisionOutput{
+				Environment: map[string]string{
+					"CLICKHOUSE_HOST":     "abc123.us-east-1.aws.clickhouse.cloud",
+					"CLICKHOUSE_USER":     "default",
+					"CLICKHOUSE_PASSWORD": "hunter2",
+				},
+				CommandLine: []string{"--port", "9440", "--secure"},
 			},
 		},
 	})

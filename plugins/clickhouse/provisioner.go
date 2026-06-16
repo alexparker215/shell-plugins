@@ -2,6 +2,7 @@ package clickhouse
 
 import (
 	"context"
+	"strings"
 
 	"github.com/1Password/shell-plugins/sdk"
 	"github.com/1Password/shell-plugins/sdk/provision"
@@ -24,6 +25,10 @@ func (p clickHouseProvisioner) Provision(ctx context.Context, in sdk.ProvisionIn
 	if port := in.ItemFields[fieldname.Port]; port != "" {
 		out.AddArgs("--port", port)
 	}
+
+	if isTruthy(in.ItemFields[fieldname.Secure]) {
+		out.AddArgs("--secure")
+	}
 }
 
 func (p clickHouseProvisioner) Deprovision(ctx context.Context, in sdk.DeprovisionInput, out *sdk.DeprovisionOutput) {
@@ -31,5 +36,13 @@ func (p clickHouseProvisioner) Deprovision(ctx context.Context, in sdk.Deprovisi
 }
 
 func (p clickHouseProvisioner) Description() string {
-	return "Provision the ClickHouse host, user, and password as environment variables, and the port as a --port flag when set."
+	return "Provision the ClickHouse host, user, and password as environment variables, and the port and TLS settings as command-line flags when set."
+}
+
+func isTruthy(v string) bool {
+	switch strings.ToLower(strings.TrimSpace(v)) {
+	case "true", "1", "yes", "on":
+		return true
+	}
+	return false
 }

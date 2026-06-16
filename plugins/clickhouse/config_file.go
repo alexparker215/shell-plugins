@@ -39,6 +39,7 @@ type clickHouseConfigFile struct {
 	Port     flexibleString `xml:"port" yaml:"port"`
 	User     string         `xml:"user" yaml:"user"`
 	Password string         `xml:"password" yaml:"password"`
+	Secure   flexibleString `xml:"secure" yaml:"secure"`
 }
 
 func importConfigFile(path string) func(ctx context.Context, contents importer.FileContents, in sdk.ImportInput, out *sdk.ImportAttempt) {
@@ -70,7 +71,10 @@ func importConfigFile(path string) func(ctx context.Context, contents importer.F
 			fields[fieldname.Port] = string(config.Port)
 		}
 		if config.User != "" {
-			fields[fieldname.Username] = config.User
+			fields[fieldname.User] = config.User
+		}
+		if isTruthy(string(config.Secure)) {
+			fields[fieldname.Secure] = "true"
 		}
 
 		out.AddCandidate(sdk.ImportCandidate{
